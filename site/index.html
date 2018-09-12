@@ -1,0 +1,21 @@
+<html>
+    <head>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+          const marriedAt = new Date('2018-09-22T15:00:00+01:00');
+          setTimeDisplay();
+          setInterval(setTimeDisplay, 1000);
+
+          function setTimeDisplay() {
+            // TODO check the timezone of new Date()
+            let diffMs = (new Date()) - marriedAt;
+            document.getElementById('time-display').innerHTML = diffMs;
+            console.log(marriedAt);
+          };
+      });
+    </script>
+    </head>
+    <body>
+        <div id="time-display"></div>
+    </body>
+</html>
