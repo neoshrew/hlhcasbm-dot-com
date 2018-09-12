@@ -7,7 +7,6 @@
           setInterval(setTimeDisplay, 1000);
 
           function setTimeDisplay() {
-            // TODO check the timezone of new Date()
             let diffMs = (new Date()) - marriedAt;
             document.getElementById('time-display').innerHTML = diffMs;
             console.log(marriedAt);
