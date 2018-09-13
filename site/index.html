@@ -3,13 +3,14 @@
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function() {
           const marriedAt = new Date('2018-09-22T15:00:00+01:00');
+          const dateDisplay = document.getElementById('time-display');
           setTimeDisplay();
           setInterval(setTimeDisplay, 1000);
 
           function setTimeDisplay() {
-            let diffMs = (new Date()) - marriedAt;
-            document.getElementById('time-display').innerHTML = diffMs;
-            console.log(marriedAt);
+            let now = new Date();
+            let diffMs = now - marriedAt;
+            dateDisplay.innerHTML = diffMs;
           };
       });
     </script>
