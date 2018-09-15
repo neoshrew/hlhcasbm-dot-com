@@ -4,13 +4,66 @@
         document.addEventListener("DOMContentLoaded", function() {
           const marriedAt = new Date('2018-09-22T15:00:00+01:00');
           const dateDisplay = document.getElementById('time-display');
-          setTimeDisplay();
-          setInterval(setTimeDisplay, 1000);
+          updateTimeDisplay();
+          setInterval(updateTimeDisplay, 1000);
 
-          function setTimeDisplay() {
-            let now = new Date();
-            let diffMs = now - marriedAt;
-            dateDisplay.innerHTML = diffMs;
+          function updateTimeDisplay() {
+            const fullResult = calculateDiff(marriedAt, new Date());
+            setTimeDisplay(fullResult);
+          };
+
+          function setTimeDisplay(result) {
+            const reorderedResult = [];
+            result.forEach((res, index) => {
+              const newIndex = result.length - index -1;
+              reorderedResult[newIndex] = res;
+            });
+            const dateTimeString = reorderedResult
+              .filter(([res, unit]) => res > 0)
+              .map(i => i.join(' '))
+              .join(' ');
+            dateDisplay.innerHTML = dateTimeString;
+          };
+
+
+          function calculateDiff(startDate, endDate) {
+            // Correct dates so that endDate is after startDate.
+            start = startDate;
+            end = endDate;
+
+            if (startDate > endDate) {
+              start = endDate;
+              end = startDate;
+            }
+
+            const map = [
+              ['seconds', 'getSeconds', 60],
+              ['minutes', 'getMinutes', 60],
+              ['hours', 'getHours', 24],
+              ['days', 'getDate', 30],
+              ['months', 'getMonth', 12],
+              ['years', 'getYear', null],
+            ];
+
+            let remainder = 0;
+            return map.map(([unit, functionName, limit]) => {
+              const startUnit = start[functionName]();
+              const endUnit = end[functionName]();
+              const diff = endUnit - startUnit;
+
+              console.log(unit, startUnit, endUnit, diff);
+
+              let res;
+              if (diff < 0) {
+                res = diff + limit - remainder;
+                remainder = 1;
+              } else {
+                res = diff - remainder;
+                remainder = 0;
+              }
+
+              return [res, unit];
+            });
           };
       });
     </script>
