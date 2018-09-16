@@ -12,7 +12,7 @@
       }
 
       #time-display span {
-        padding-left: 5px;
+        padding-left: 10px;
       }
 
       @media screen and (max-device-width: 480px) {
@@ -30,7 +30,8 @@
           setInterval(updateTimeDisplay, 1000);
 
           function updateTimeDisplay() {
-            const fullResult = calculateDiff(marriedAt, new Date());
+            const [reversed, fullResult] = calculateDiff(marriedAt, new Date());
+            dateDisplay.getElementsByClassName('sign')[0].innerHTML = reversed ? '-' : '';
             setTimeDisplay(fullResult);
           };
 
@@ -75,55 +76,63 @@
             return value === 1
               ? `${unit.slice(0, unit.length - 1)}`
               : `${unit}`
-          }
+          };
+
+          function getPrevMonthDays(date) {
+            const currentYear = date.getFullYear();
+            const currentMonth = date.getMonth();
+            // 0 means one day less than first day of the month,
+            // which is last day of the previous month.
+            // https://stackoverflow.com/questions/222309/calculate-last-day-of-month-in-javascript
+            const lastDayOfMonth = new Date(currentYear, currentMonth, 0);
+            return lastDayOfMonth.getDate();
+          };
 
           function calculateDiff(startDate, endDate) {
             // Correct dates so that endDate is after startDate.
-            start = startDate;
-            end = endDate;
+            let start = startDate;
+            let end = endDate;
+            let reversed = false;
 
             if (startDate > endDate) {
               start = endDate;
               end = startDate;
+              reversed = true;
             }
 
             const map = [
               ['seconds', 'getSeconds', 60],
-              ['minutes', 'getMinutes', 60],
               ['hours', 'getHours', 24],
-              ['days', 'getDate', 30],
+              ['days', 'getDate', getPrevMonthDays],
               ['months', 'getMonth', 12],
-              ['years', 'getYear', null],
+              ['years', 'getFullYear', null],
             ];
 
             let remainder = 0;
-            return map.map(([unit, functionName, limit]) => {
+            return [reversed, map.map(([unit, functionName, limit]) => {
               const startUnit = start[functionName]();
               const endUnit = end[functionName]();
-              const diff = endUnit - startUnit;
+              const diff = endUnit - startUnit - remainder;
 
               let res;
               if (diff < 0) {
-                res = diff + limit - remainder;
+                const max = typeof limit === 'function' ? limit(end) : limit;
+                res = diff + max;
                 remainder = 1;
               } else {
-                res = diff - remainder;
+                res = diff;
                 remainder = 0;
-
-                if (res < 0) {
-                  res = 0;
-                  remainder = 1;
-                }
               }
 
               return [res, unit];
-            });
+            })];
           };
       });
     </script>
     </head>
     <body>
         <div id="time-display">
+          <span class="sign"></span>
           <span class="years"></span>
           <span class="months"></span>
           <span class="days"></span>
