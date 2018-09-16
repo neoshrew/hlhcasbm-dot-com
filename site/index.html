@@ -1,5 +1,27 @@
 <html>
     <head>
+    <style type="text/css">
+      #time-display {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        vertical-align: middle;
+        color: gray;
+        font-size: 50px;
+      }
+
+      #time-display span {
+        padding-left: 5px;
+      }
+
+      @media screen and (max-device-width: 480px) {
+        #time-display {
+          font-size: 100px;
+          flex-direction: column;
+        }
+      }
+    </style>
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function() {
           const marriedAt = new Date('2018-09-22T15:00:00+01:00');
@@ -18,13 +40,42 @@
               const newIndex = result.length - index -1;
               reorderedResult[newIndex] = res;
             });
-            const dateTimeString = reorderedResult
-              .filter(([res, unit]) => res > 0)
-              .map(i => i.join(' '))
-              .join(' ');
-            dateDisplay.innerHTML = dateTimeString;
+
+            let showZero = false;
+            reorderedResult
+              .filter(([value, unit]) => {
+                // Remove first n values if they are 0,
+                // but keep them if they appear after the
+                // first non-zero value unit.
+                const filter = value > 0 || showZero;
+                showZero = showZero ? showZero : value > 0;
+                return filter;
+              })
+              .forEach(([value, unit], index) => {
+                let displayValue = `${value}`;
+                if (index !== 0) {
+                  displayValue = padValue(displayValue, 2);
+                }
+                const unitValue = unPluralize(value, unit);
+                dateDisplay.getElementsByClassName(unit)[0].innerHTML = `${displayValue} ${unitValue}`;
+              });
           };
 
+          function padValue(value, length) {
+            const padding = length - value.length;
+            if (padding <= 0) {
+              return `${value}`;
+            } else {
+              const zeros = [...Array(padding).keys()];
+              return `${zeros.join('')}${value}`
+            }
+          };
+
+          function unPluralize(value, unit) {
+            return value === 1
+              ? `${unit.slice(0, unit.length - 1)}`
+              : `${unit}`
+          }
 
           function calculateDiff(startDate, endDate) {
             // Correct dates so that endDate is after startDate.
@@ -72,6 +123,13 @@
     </script>
     </head>
     <body>
-        <div id="time-display"></div>
+        <div id="time-display">
+          <span class="years"></span>
+          <span class="months"></span>
+          <span class="days"></span>
+          <span class="hours"></span>
+          <span class="minutes"></span>
+          <span class="seconds"></span>
+        </div>
     </body>
 </html>
