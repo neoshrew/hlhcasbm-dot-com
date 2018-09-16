@@ -16,6 +16,7 @@ resource "aws_cloudfront_distribution" "site" {
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
+  price_class         = "${var.cf_price_class}"
 
   logging_config {
     include_cookies = false

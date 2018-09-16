@@ -33,3 +33,7 @@ variable site_domain {
 variable route53_zone_name {
   default = "howlonghavechrisandsofijabeenmarried.com"
 }
+
+variable cf_price_class {
+  default = "PriceClass_100"
+}
