@@ -40,7 +40,8 @@ resource "aws_cloudfront_distribution" "site" {
     }
 
     # TODO !!
-    viewer_protocol_policy = "allow-all"
+    viewer_protocol_policy = "redirect-to-https"
+    compress               = true
     min_ttl                = 0
     default_ttl            = 0
     max_ttl                = 0
