@@ -51,8 +51,6 @@
               const endUnit = end[functionName]();
               const diff = endUnit - startUnit;
 
-              console.log(unit, startUnit, endUnit, diff);
-
               let res;
               if (diff < 0) {
                 res = diff + limit - remainder;
@@ -60,6 +58,11 @@
               } else {
                 res = diff - remainder;
                 remainder = 0;
+
+                if (res < 0) {
+                  res = 0;
+                  remainder = 1;
+                }
               }
 
               return [res, unit];
