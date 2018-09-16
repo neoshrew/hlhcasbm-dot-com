@@ -1,11 +1,15 @@
 provider aws {
-  region = "${var.aws_region}"
+  region              = "${var.aws_region}"
+  allowed_account_ids = ["${var.aws_account_id}"]
 }
 
 provider aws {
-  alias  = "global"
-  region = "us-east-1"
+  alias               = "global"
+  region              = "us-east-1"
+  allowed_account_ids = ["${var.aws_account_id}"]
 }
+
+variable aws_account_id {}
 
 variable global_prefix {
   description = "Global prefix to distinguish from other things"
