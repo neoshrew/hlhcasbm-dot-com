@@ -25,7 +25,7 @@ bucket_name=$(cat $TMPFILE | jq -r '.bucket.value')
 printf "Syncing to bucket %s\n" "${bucket_name}"
 aws s3 sync ./site s3://"${bucket_name}/"
 
-# printf "creating invalidation in distro id %s\n" "${distro_id}"
-# aws cloudfront create-invalidation \
-#   --distribution-id "${distro_id}" \
-#   --paths /
+printf "creating invalidation in distro id %s\n" "${distro_id}"
+aws cloudfront create-invalidation \
+  --distribution-id "${distro_id}" \
+  --paths /
