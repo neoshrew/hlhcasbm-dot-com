@@ -7,13 +7,6 @@ function finish {
 }
 trap finish EXIT
 
-now=$(date +%Y-%m-%dT%H:%M:%S%z)
-printf "Setting nuptuals to now - %s\n" "${now}"
-# Note to future generations - this isn't ideal
-regex="^(\s*const marriedAt = new Date\(').*?('\);)"
-repl="\1${now}\2"
-sed -Ei "s/${regex}/${repl}/" site/index.html
-
 cd infra
 printf "Grabbing TF output\n"
 terraform output -json > $TMPFILE
