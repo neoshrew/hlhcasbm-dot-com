@@ -68,14 +68,14 @@
               return `${value}`;
             } else {
               const zeros = [...Array(padding).keys()];
-              return `${zeros.join('')}${value}`
+              return `${zeros.join('')}${value}`;
             }
           };
 
           function unPluralize(value, unit) {
             return value === 1
               ? `${unit.slice(0, unit.length - 1)}`
-              : `${unit}`
+              : `${unit}`;
           };
 
           function getPrevMonthDays(date) {
